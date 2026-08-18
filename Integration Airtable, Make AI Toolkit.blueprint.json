@@ -1,0 +1,469 @@
+{
+    "name": "Integration Airtable, Make AI Toolkit",
+    "flow": [
+        {
+            "id": 2,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appQeub6HqhFf8ppI",
+                "view": "",
+                "table": "tbllDMqeigywrYm0V",
+                "config": {
+                    "labelField": "Nome",
+                    "triggerField": "Data"
+                },
+                "formula": "",
+                "maxRecords": 10,
+                "__IMTCONN__": 10360959,
+                "useColumnId": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "CRM de Leads - IA"
+                        },
+                        "view": {
+                            "label": "Empty"
+                        },
+                        "table": {
+                            "label": "Table 1"
+                        },
+                        "config": {
+                            "nested": {
+                                "labelField": {
+                                    "label": "Nome"
+                                },
+                                "triggerField": {
+                                    "label": "Data"
+                                }
+                            }
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Jonas's Airtable OAuth connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration"
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Nome",
+                        "type": "text",
+                        "label": "Nome"
+                    },
+                    {
+                        "name": "E-mail",
+                        "type": "text",
+                        "label": "E-mail",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Empresa",
+                        "type": "text",
+                        "label": "Empresa"
+                    },
+                    {
+                        "name": "Qualificado",
+                        "type": "text",
+                        "label": "Qualificado"
+                    },
+                    {
+                        "name": "Mensagem",
+                        "type": "text",
+                        "label": "Mensagem",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Resumo IA",
+                        "type": "text",
+                        "label": "Resumo IA",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Data",
+                        "type": "date",
+                        "label": "Data"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "ai-tools:Ask",
+            "version": 2,
+            "parameters": {
+                "model": "medium",
+                "makeConnectionId": 10361069
+            },
+            "mapper": {
+                "input": "Analise a mensagem do lead abaixo e responda APENAS no formato JSON, sem texto adicional, sem explicações, começando direto com a chave {\n\n{\n  \"qualificado\": \"Sim ou Não\",\n  \"resumo\": \"resumo de 1 frase da mensagem\"\n}\n\nCritério: considere \"Sim\" se o lead demonstrar interesse real em contratar, comprar ou agendar reunião. Considere \"Não\" se for spam, reclamação, pergunta genérica sem intenção de compra, ou mensagem vazia/irrelevante.\n\nMensagem do lead: {{2.Mensagem}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "MediumModel: gpt-5-nano. Reasoning: low. A balanced, quick choice for clearly defined tasks needing reliable answers rather than deep analysis",
+                            "nested": []
+                        },
+                        "makeConnectionId": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "ai-provider"
+                            },
+                            "label": "Jonas's Make's AI Provider connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "makeConnectionId",
+                        "type": "account:ai-provider,openai-gpt-3,anthropic-claude,gemini-ai-q9zyjp,ai-agent-foundry-openai,ai-agent-foundry-non-openai,mistral-ai,cohere,groq,ai-agent-xai,amazon-bedrock,ai-agent-openai-compatible",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {},
+            "filter": null,
+            "mapper": {
+                "json": "{{4.answer}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {},
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "airtable:ActionUpdateRecords",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 10361107
+            },
+            "mapper": {
+                "id": "{{2.id}}",
+                "base": "appQeub6HqhFf8ppI",
+                "table": "tbllDMqeigywrYm0V",
+                "record": {
+                    "flddhXLV4tDQQat2H": "{{6.resumo}}",
+                    "fldudgl1yaESHhXvl": "{{6.qualificado}}"
+                },
+                "typecast": false,
+                "useColumnId": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "base": {
+                            "label": "CRM de Leads - IA"
+                        },
+                        "table": {
+                            "label": "Table 1"
+                        },
+                        "record": {
+                            "nested": {
+                                "fldudgl1yaESHhXvl": {
+                                    "mode": "edit"
+                                }
+                            }
+                        },
+                        "typecast": {
+                            "mode": "chose"
+                        },
+                        "useColumnId": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Jonas's Airtable OAuth connection (User ID: usrUlwB83SJAFvA6R)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "typecast",
+                        "type": "boolean",
+                        "label": "Smart links",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Record ID",
+                        "required": true
+                    },
+                    {
+                        "name": "record",
+                        "spec": [
+                            {
+                                "name": "fldwEGcalfuGIqWks",
+                                "type": "text",
+                                "label": "Nome"
+                            },
+                            {
+                                "name": "fldFepcUr6xZWfvIm",
+                                "type": "text",
+                                "label": "E-mail"
+                            },
+                            {
+                                "name": "fldfkAOaSRqm7LmgG",
+                                "type": "text",
+                                "label": "Empresa"
+                            },
+                            {
+                                "mode": "edit",
+                                "name": "fldudgl1yaESHhXvl",
+                                "type": "select",
+                                "label": "Qualificado"
+                            },
+                            {
+                                "name": "fldP8GYpUztBAhJiR",
+                                "type": "text",
+                                "label": "Mensagem"
+                            },
+                            {
+                                "name": "flddhXLV4tDQQat2H",
+                                "type": "text",
+                                "label": "Resumo IA"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Nome",
+                        "type": "text",
+                        "label": "Nome"
+                    },
+                    {
+                        "name": "E-mail",
+                        "type": "text",
+                        "label": "E-mail",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Empresa",
+                        "type": "text",
+                        "label": "Empresa"
+                    },
+                    {
+                        "name": "Qualificado",
+                        "type": "text",
+                        "label": "Qualificado"
+                    },
+                    {
+                        "name": "Mensagem",
+                        "type": "text",
+                        "label": "Mensagem",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Resumo IA",
+                        "type": "text",
+                        "label": "Resumo IA",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Data",
+                        "type": "date",
+                        "label": "Data"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
